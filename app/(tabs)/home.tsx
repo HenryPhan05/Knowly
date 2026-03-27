@@ -1,14 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Button } from 'react-native'
 import React from 'react'
-
-const home = () => {
+import { useContext } from 'react'
+import { ThemeContext } from '@/components/ThemeContext'
+export default function Home() {
+  const { isDark, toggleTheme } = useContext(ThemeContext)!;
+  console.log(isDark);
   return (
     <View>
       <Text>home</Text>
+      <Button title='toggle' onPress={toggleTheme} />
+
     </View>
   )
 }
 
-export default home
+
 
 const styles = StyleSheet.create({})

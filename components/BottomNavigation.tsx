@@ -1,15 +1,17 @@
 import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { AntDesign } from "@expo/vector-icons";
+import { useTheme } from "@/hook/useTheme";
 import { ThemeContext } from "./ThemeContext";
-import { useTheme } from "@react-navigation/native";
-
 const BottomNavigation = () => {
+  const { isDark } = useContext(ThemeContext)!;
   const theme = useTheme();
   return (
     <Tabs
       screenOptions={{
+        tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
           height: 111,
           borderTopLeftRadius: 30,
@@ -22,37 +24,45 @@ const BottomNavigation = () => {
         },
 
         tabBarActiveTintColor: "#4647D3",
-        tabBarInactiveTintColor: "#515C70",
+        tabBarInactiveTintColor: isDark ? "#ECF1FF" : "#515C70",
         tabBarActiveBackgroundColor: "#B0C4FF",
         tabBarItemStyle: {
           width: 74,
           height: 57,
           borderRadius: 10,
           overflow: "hidden",
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "bold",
+          fontFamily: "Inter",
         }
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="home" size={size} color={color} />
+          title: "HOME",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="home" size={30} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="task"
+        name="task/index"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="home" size={size} color={color} />
+          title: "TASKS",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="carry-out" size={25} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="setting"
+        name="setting/index"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="home" size={size} color={color} />
+          title: "SETTINGS",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="settings" size={25} color={color} />
           ),
         }}
       />
