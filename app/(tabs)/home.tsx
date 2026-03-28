@@ -4,7 +4,7 @@ import { useContext } from 'react'
 import { ThemeContext } from '@/components/ThemeContext'
 export default function Home() {
   const { isDark, toggleTheme } = useContext(ThemeContext)!;
-  console.log(isDark);
+
   return (
     <View>
       <Text>home</Text>

@@ -11,6 +11,7 @@ const BottomNavigation = () => {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
         tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
           height: 111,
