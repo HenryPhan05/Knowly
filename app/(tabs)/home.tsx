@@ -3,6 +3,20 @@ import React from 'react'
 import { useContext } from 'react'
 import { ThemeContext, ThemeProvider } from '@/components/ThemeContext'
 
+
+export default function HomeLayout() {
+  return (
+    <View style={styles.container}>
+      <KnowlyApp />
+      <View style={styles.centeredContent}>
+        <TodaysTask title="Complete project proposal" isCompleted={false} />
+        <TodaysTask title="Review team feedback" isCompleted={true} />
+        <DeadlineTasks time="2024-06-30 23:59" />
+      </View>
+    </View>
+  );
+}
+// this is the main component for the home screen, it will contain the header and the main content of the home screen
 const KnowlyApp = () => {
   return (
     <View style={styles.container}>
@@ -12,23 +26,29 @@ const KnowlyApp = () => {
     </View>
   )
 }
-
-const Deadlines = [
-  { id: 1, title: 'Project Proposal', dueDate: '2024-07-01' },
-  { id: 2, title: 'Midterm Report', dueDate: '2024-08-15' },
-  { id: 3, title: 'Final Presentation', dueDate: '2024-09-30' },
-];
-
-export default function HomeLayout() {
+// Almost done this, need to work on the button and add some more features to it
+const TodaysTask = ({ title, isCompleted }: { title: string; isCompleted: boolean }) => {
   return (
-    <View style={styles.container}>
-      <KnowlyApp />
-      <View style={styles.centeredContent}>
-        <Text style={styles.text}>Home Screen</Text>
-      </View>
+    <View style={styles.taskWrapper}>
+      <view style={styles.TaskCard}>
+        <Text>{title}</Text>
+        <Button title={isCompleted ? "Completed" : "Press to Complete"} onPress={() => {}} />
+      </view>
+
     </View>
-  );
-}
+  )}
+// Messing around with the deadline tasks component, will add more features to it later on.
+  const DeadlineTasks = ({ time }: { time: string }) => {
+    return (
+      <View style={styles.taskWrapper}>
+        <View style={styles.TaskCard}>
+        <Text>Deadline: {time}</Text>
+      </View>
+      </View>
+    );
+  }
+
+//const { isDark, toggleTheme } = useContext(ThemeContext)!;
 
 const styles = StyleSheet.create({
   container: {
@@ -41,9 +61,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottomWidth: 3,
+    borderBottomColor: 'black',
   },
   logoText: {
-    fontSize: 30,
+    fontSize: 40,
     fontWeight: '900',
     color: '#737ACB',
   },
@@ -56,9 +78,16 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  taskWrapper: {
+    marginVertical: 6,
+  },
+  TaskCard:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#737ACB',
+    padding: 16,
+    borderRadius: 16,
   }
 });
-
-/*import { ThemeContext } from '@/components/ThemeContext'
-export default function Home() {
-  const { isDark, toggleTheme } = useContext(ThemeContext)!;*/
