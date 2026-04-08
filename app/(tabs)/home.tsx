@@ -1,93 +1,226 @@
-import { StyleSheet, Text, View, ScrollView, Button } from 'react-native'
-import React from 'react'
-import { useContext } from 'react'
-import { ThemeContext, ThemeProvider } from '@/components/ThemeContext'
-
+import React from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function HomeLayout() {
   return (
-    <View style={styles.container}>
-      <KnowlyApp />
-      <View style={styles.centeredContent}>
-        <TodaysTask title="Complete project proposal" isCompleted={false} />
-        <TodaysTask title="Review team feedback" isCompleted={true} />
-        <DeadlineTasks time="2024-06-30 23:59" />
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.logoText}>Knowly</Text>
+        <View style={styles.profilePlaceholder} />
+      </View>
+
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* Today's Focus Section */}
+        <Text style={styles.sectionTitle}>Today's Focus</Text>
+        <TodaysTask title="Do homework" isCompleted={false} />
+        <TodaysTask title="Go Shopping" isCompleted={true} />
+        <TodaysTask title="Do the chores" isCompleted={false} />
+
+        <TouchableOpacity style={styles.addButton}>
+          <Text style={styles.addButtonText}>ADD NEW FOCUS</Text>
+        </TouchableOpacity>
+
+        {/* Upcoming Deadlines Section */}
+        <Text style={styles.sectionTitle}>Upcoming Deadlines</Text>
+        <DeadlineTasks
+          title="Finish Knowly"
+          label="CRITICAL"
+          time="In 2 days"
+        />
+        <DeadlineTasks
+          title="Finish WebDev Project"
+          label="PROJECT"
+          time="In 5 days"
+        />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const TodaysTask = ({
+  title,
+  isCompleted,
+}: {
+  title: string;
+  isCompleted: boolean;
+}) => {
+  return (
+    <View style={styles.taskCard}>
+      <View style={styles.taskLeftSection}>
+        <View
+          style={[styles.checkbox, isCompleted && styles.checkboxChecked]}
+        />
+        <View>
+          <Text style={[styles.taskTitle, isCompleted && styles.completedText]}>
+            {title}
+          </Text>
+          {isCompleted && (
+            <Text style={styles.completedLabel}>✓ Completed</Text>
+          )}
+        </View>
+      </View>
+      <TouchableOpacity style={styles.deleteButton}>
+        <Text style={styles.deleteText}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const DeadlineTasks = ({
+  title,
+  label,
+  time,
+}: {
+  title: string;
+  label: string;
+  time: string;
+}) => {
+  return (
+    <View style={styles.deadlineCard}>
+      <View style={styles.deadlineIndicator} />
+      <View style={styles.deadlineInfo}>
+        <View style={styles.deadlineHeader}>
+          <Text style={styles.deadlineLabel}>{label}</Text>
+          <Text style={styles.deadlineTime}>{time}</Text>
+        </View>
+        <Text style={styles.deadlineTitle}>{title}</Text>
       </View>
     </View>
   );
-}
-// this is the main component for the home screen, it will contain the header and the main content of the home screen
-const KnowlyApp = () => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.logoText}>Knowly</Text>
-      </View>
-    </View>
-  )
-}
-// Almost done this, need to work on the button and add some more features to it
-const TodaysTask = ({ title, isCompleted }: { title: string; isCompleted: boolean }) => {
-  return (
-    <View style={styles.taskWrapper}>
-      <view style={styles.TaskCard}>
-        <Text>{title}</Text>
-        <Button title={isCompleted ? "Completed" : "Press to Complete"} onPress={() => {}} />
-      </view>
-
-    </View>
-  )}
-// Messing around with the deadline tasks component, will add more features to it later on.
-  const DeadlineTasks = ({ time }: { time: string }) => {
-    return (
-      <View style={styles.taskWrapper}>
-        <View style={styles.TaskCard}>
-        <Text>Deadline: {time}</Text>
-      </View>
-      </View>
-    );
-  }
-
-//const { isDark, toggleTheme } = useContext(ThemeContext)!;
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    flex: 1,
+    backgroundColor: "white",
   },
   header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 24,
-    paddingTop: 48,
-    paddingBottom: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 3,
-    borderBottomColor: 'black',
+    paddingVertical: 20,
   },
   logoText: {
-    fontSize: 40,
-    fontWeight: '900',
-    color: '#737ACB',
+    fontSize: 32,
+    fontWeight: "900",
+    color: "#737ACB",
   },
-  centeredContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  profilePlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#F3E5D8",
   },
-  text: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: 'bold',
+  content: {
+    paddingHorizontal: 24,
   },
-  taskWrapper: {
-    marginVertical: 6,
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginTop: 20,
+    marginBottom: 15,
   },
-  TaskCard:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#737ACB',
+  // Task Card Styles
+  taskCard: {
+    flexDirection: "row",
+    backgroundColor: "#F0F4FF",
     padding: 16,
-    borderRadius: 16,
-  }
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  taskLeftSection: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderWidth: 2,
+    borderColor: "#737ACB",
+    borderRadius: 4,
+    marginRight: 12,
+  },
+  checkboxChecked: {
+    backgroundColor: "#2D6A4F",
+    borderColor: "#2D6A4F",
+  },
+  taskTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  completedText: {
+    color: "#8E8E8E",
+  },
+  completedLabel: {
+    fontSize: 12,
+    color: "#8E8E8E",
+  },
+  deleteButton: {
+    backgroundColor: "#FF0000",
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  deleteText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  addButton: {
+    backgroundColor: "#5C63D1",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignSelf: "flex-start",
+    marginVertical: 10,
+  },
+  addButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  // Deadline Styles
+  deadlineCard: {
+    flexDirection: "row",
+    backgroundColor: "#F0F4FF",
+    borderRadius: 12,
+    marginBottom: 12,
+    overflow: "hidden",
+  },
+  deadlineIndicator: {
+    width: 6,
+    backgroundColor: "#5C63D1",
+  },
+  deadlineInfo: {
+    flex: 1,
+    padding: 16,
+  },
+  deadlineHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  deadlineLabel: {
+    color: "#5C63D1",
+    fontWeight: "800",
+    fontSize: 12,
+  },
+  deadlineTime: {
+    color: "#8E8E8E",
+    fontSize: 12,
+  },
+  deadlineTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
 });
