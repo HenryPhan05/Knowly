@@ -1,8 +1,8 @@
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useContext } from 'react'
-import { AntDesign } from "@expo/vector-icons";
+import React, { useContext } from 'react';
+import { StyleSheet } from 'react-native';
+
 import { useTheme } from "@/hook/useTheme";
 import { ThemeContext } from "./ThemeContext";
 const BottomNavigation = () => {
@@ -15,8 +15,7 @@ const BottomNavigation = () => {
         tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
           height: 111,
-          borderTopLeftRadius: 30,
-          borderTopEndRadius: 30,
+
           paddingLeft: 15,
           paddingRight: 15,
           paddingTop: 20,
@@ -50,7 +49,7 @@ const BottomNavigation = () => {
         }}
       />
       <Tabs.Screen
-        name="task/index"
+        name="task"
         options={{
           title: "TASKS",
           tabBarIcon: ({ color }) => (
@@ -59,7 +58,7 @@ const BottomNavigation = () => {
         }}
       />
       <Tabs.Screen
-        name="setting/index"
+        name="setting"
         options={{
           title: "SETTINGS",
           tabBarIcon: ({ color }) => (
