@@ -1,18 +1,40 @@
+import { AuthProvider } from "@/components/AuthContext";
+import { ThemeProvider } from "@/components/ThemeContext";
 import { useAuth } from "@/hook/useAuth";
-import { useTheme } from "@react-navigation/native";
-import { Redirect } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
-export default function Index() {
+import { Slot, useRouter, useSegments } from "expo-router";
+import { useEffect } from "react";
+
+const AuthGuard = () => {
   const { session, isLoading } = useAuth();
-  const theme = useTheme();
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: "center", backgroundColor: theme.colors.background }}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      </View>
-    );
-  }
+  const segments = useSegments();
+  const router = useRouter();
 
-  return <Redirect href={session ? "/(tabs)/home" : "/login"} />;
+  useEffect(() => {
+    if (isLoading) return;
 
+    const isAuthPage =
+      segments[0] === "login" ||
+      segments[0] === "logup" ||
+      segments[0] === "findAccount";
+
+    if (!session && !isAuthPage) {
+      router.replace("/login");
+    } else if (session && isAuthPage) {
+      router.replace("/(tabs)/home");
+    }
+  }, [session, isLoading, segments]);
+
+  return null
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <ThemeProvider>
+
+        <Slot />
+        <AuthGuard />
+      </ThemeProvider>
+    </AuthProvider>
+  );
 }
