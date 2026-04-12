@@ -1,3 +1,4 @@
+
 export const logo = {
   text: "#4647D3",
 }
@@ -13,6 +14,8 @@ export const lightTheme = {
     incompleteCheckbox: '#B0C4FF',
     completedCheckbox: '#006947',
     errorText: '#FF0303',
+    progressText: '#515C70',
+    notStartedButton: "#D9D9D9",
   },
 }
 export const darkTheme = {
@@ -24,6 +27,8 @@ export const darkTheme = {
     incompleteCheckbox: "#B0C4FF",
     completedCheckbox: "#00DD96",
     errorText: '#FF0303',
+    progressText: '#ECF1FF',
+    notStartedButton: "#ECF1FF",
   },
 }
 export const taskProgress = {
