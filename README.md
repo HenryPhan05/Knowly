@@ -112,7 +112,7 @@ npm run reset-project
 
 ## 🎯 Future Improvements
 
-* 🔐 User Authentication (Supabase / Firebase)
+
 * 👥 Social Features (share progress, follow friends)
 * 📈 Analytics Dashboard
 * 🔔 Push Notifications
