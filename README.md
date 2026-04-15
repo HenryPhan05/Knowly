@@ -123,7 +123,8 @@ npm run reset-project
 ## 👨‍💻 Author
 
 * **Henry Phan**
-* GitHub: https://github.com/HenryPhan05
+* **Justin Norman**
+* **Cielo Pacot**
 
 ---
 
