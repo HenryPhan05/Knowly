@@ -2,13 +2,13 @@ import { ThemeContext } from '@/components/ThemeContext';
 import { useTheme } from "@/hook/useTheme";
 import { addUser, checkEmailExists } from '@/lib/supabaseImplemented';
 import { logo } from "@/styles/theme";
+import { Ionicons } from '@expo/vector-icons';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import React, { useContext, useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
-
 const signUpSchema = z
   .object({
     first_name: z
@@ -37,7 +37,7 @@ const signUpSchema = z
   });
 type SignUpForm = z.infer<typeof signUpSchema>
 const LogUp = () => {
-  const { isDark, toggleTheme } = useContext(ThemeContext)!;
+  const { isDark } = useContext(ThemeContext)!;
 
   const [showPassword, setShowPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
@@ -168,21 +168,41 @@ const LogUp = () => {
         {/* Password */}
         <View style={style.inputGroup}>
           <Text style={style.inputLabel}>Password</Text>
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={style.input}
-                placeholder="Enter your Password"
-                placeholderTextColor={isDark ? "white" : "black"}
-                value={value}
-                onChangeText={onChange}
-                secureTextEntry={showPassword}
-                autoComplete="new-password"
+
+          <View style={{ position: 'relative', justifyContent: 'center' }}>
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  style={[
+                    style.input,
+                    { paddingRight: 40 }
+                  ]}
+                  placeholder="Enter your Password"
+                  placeholderTextColor={isDark ? "white" : "black"}
+                  value={value}
+                  onChangeText={onChange}
+                  secureTextEntry={showPassword}
+                  autoComplete="new-password"
+                />
+              )}
+            />
+
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={{
+                position: 'absolute',
+                right: 10,
+              }}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={20}
+                color={isDark ? "white" : "black"}
               />
-            )}
-          />
+            </TouchableOpacity>
+          </View>
           {errors.password &&
             (<Text style={style.error}>{errors.password.message}</Text>
             )}
@@ -191,21 +211,40 @@ const LogUp = () => {
         {/* confirm Password */}
         <View style={style.inputGroup}>
           <Text style={style.inputLabel}>Confirm Password</Text>
-          <Controller
-            control={control}
-            name="confirmPassword"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={style.input}
-                placeholder="Enter your Password"
-                placeholderTextColor={isDark ? "white" : "black"}
-                value={value}
-                onChangeText={onChange}
-                secureTextEntry={showPassword}
-                autoComplete="new-password"
+          <View style={{ position: 'relative', justifyContent: 'center' }}>
+            <Controller
+              control={control}
+              name="confirmPassword"
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  style={[
+                    style.input,
+                    { paddingRight: 40 }
+                  ]}
+                  placeholder="Enter your Confirm Password"
+                  placeholderTextColor={isDark ? "white" : "black"}
+                  value={value}
+                  onChangeText={onChange}
+                  secureTextEntry={showConfirmPassword}
+                  autoComplete="new-password"
+                />
+              )}
+            />
+
+            <TouchableOpacity
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={{
+                position: 'absolute',
+                right: 10,
+              }}
+            >
+              <Ionicons
+                name={showConfirmPassword ? 'eye-off' : 'eye'}
+                size={20}
+                color={isDark ? "white" : "black"}
               />
-            )}
-          />
+            </TouchableOpacity>
+          </View>
           {errors.confirmPassword &&
             (<Text style={style.error}>{errors.confirmPassword.message}</Text>
             )}

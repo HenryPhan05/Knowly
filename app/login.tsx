@@ -1,7 +1,9 @@
 import { ThemeContext } from "@/components/ThemeContext";
 import { useAuth } from '@/hook/useAuth';
 import { useTheme } from "@/hook/useTheme";
+import { checkEmailExists } from "@/lib/supabaseImplemented";
 import { logo } from "@/styles/theme";
+import { Ionicons } from '@expo/vector-icons';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import React, { useContext, useState } from 'react';
@@ -44,6 +46,11 @@ export default function SignInScreen() {
     try {
       setAuthError(null);
       setSubmitting(true);
+      const checkErrorSignIn = await checkEmailExists(data.email);
+      if (!checkErrorSignIn) {
+        setAuthError('email is not existed!');
+        return;
+      };
       await signIn(data.email, data.password);
     }
     catch (e) {
@@ -98,28 +105,46 @@ export default function SignInScreen() {
         {/* Password */}
         <View style={style.inputGroup}>
           <Text style={style.inputLabel}>Password</Text>
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={style.input}
-                placeholder="Enter your Password"
-                placeholderTextColor={isDark ? "white" : "black"}
-                value={value}
-                onChangeText={onChange}
-                secureTextEntry={showPassword}
-                autoComplete="current-password"
+
+          <View style={{ position: 'relative', justifyContent: 'center' }}>
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  style={[
+                    style.input,
+                    { paddingRight: 40 }
+                  ]}
+                  placeholder="Enter your Password"
+                  placeholderTextColor={isDark ? "white" : "black"}
+                  value={value}
+                  onChangeText={onChange}
+                  secureTextEntry={showPassword}
+                  autoComplete="new-password"
+                />
+              )}
+            />
+
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={{
+                position: 'absolute',
+                right: 10,
+              }}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={20}
+                color={isDark ? "white" : "black"}
               />
-            )}
-          />
+            </TouchableOpacity>
+          </View>
           {errors.password &&
             (<Text style={style.error}>{errors.password.message}</Text>
             )}
           {authError && (
-            <Text style={{ color: 'red', marginBottom: 10 }}>
-              {authError}
-            </Text>
+            <Text style={style.error}>{authError}</Text>
           )}
         </View>
 
