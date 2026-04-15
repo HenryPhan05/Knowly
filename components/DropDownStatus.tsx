@@ -26,10 +26,10 @@ const DropDownStatus = ({ selected, onChange }: DropDownStatusProps) => {
         onPress={() => setOpen(!open)}
       >
         <Text style={{ color: "#000" }}>{selected}</Text>
-        {selected !== "Done!" && (<Text>{open ? "▲" : "▼"}</Text>)}
+        {selected && (<Text>{open ? "▲" : "▼"}</Text>)}
       </TouchableOpacity>
 
-      {selected !== "Done!" && open && (
+      {selected && open && (
         <View style={styles.dropdown}>
           {options.map((option, index) => (
             <TouchableOpacity
