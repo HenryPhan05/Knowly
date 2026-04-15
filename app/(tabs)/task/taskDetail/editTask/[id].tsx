@@ -73,12 +73,32 @@ const EditTask = () => {
   const isValidTime = (time: string) =>
     /^([01]\d|2[0-3]):([0-5]\d)$/.test(time);
 
-  const parseDateTime = (date: string, time: string) => {
-    const [m, d, y] = date.split('/').map(Number);
-    const [h, min] = time.split(':').map(Number);
-    return new Date(y, m - 1, d, h, min);
+  const toSupabaseDate = (date: string): string => {
+    if (!date) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+    const parts = date.split('/');
+    if (parts.length === 3) {
+      const [mm, dd, yyyy] = parts;
+      return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+    }
+    return date;
   };
+  //check valid of date- time
+  const isPastDateTime = (dateStr: string, timeStr: string) => {
+    const date = toSupabaseDate(dateStr);
+    const time = toSupabaseTime(timeStr);
 
+    const input = new Date(`${date}T${time}`);
+    const now = new Date();
+
+    return input < now;
+  };
+  // convert hour for user
+  const toSupabaseTime = (time: string): string => {
+    if (!time) return '';
+    if (/^\d{2}:\d{2}$/.test(time)) return `${time}:00`;
+    return time;
+  };
   const handleUpdate = async () => {
     try {
       if (
@@ -90,26 +110,27 @@ const EditTask = () => {
         setError("Invalid date or time");
         return;
       }
-
-      const toSupabaseDate = (d: string) => {
-        const parts = d.split('/');
-        if (parts.length === 3) {
-          const [mm, dd, yyyy] = parts;
-          return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
-        }
-        return d;
-      };
-      await updateTaskDetail(taskId, {
-        title: editTitle,
-        subtitle: editSubtitle,
-        description: editDescription,
-        status: editStatus,
-        start_date: toSupabaseDate(startDate),
-        end_date: toSupabaseDate(endDate),
-        start_time: startClock + ':00',
-        end_time: endClock + ':00',
-      });
-      router.back();
+      if (toSupabaseDate(endDate) < toSupabaseDate(startDate)) {
+        setError("End date must be after start date!");
+        return;
+      }
+      if (isPastDateTime(endDate, endClock)) {
+        setError("End time cannot be in the past")
+        return;
+      }
+      else {
+        await updateTaskDetail(taskId, {
+          title: editTitle,
+          subtitle: editSubtitle,
+          description: editDescription,
+          status: editStatus,
+          start_date: toSupabaseDate(startDate),
+          end_date: toSupabaseDate(endDate),
+          start_time: startClock + ':00',
+          end_time: endClock + ':00',
+        });
+        router.back();
+      }
     }
     catch (error: any) {
 

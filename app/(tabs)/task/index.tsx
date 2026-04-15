@@ -48,6 +48,8 @@ const Index = () => {
   const style = styles(theme);
   const [selectStatus, setSelectedStatus] = useState<TaskStatus>('Not started');
   const [showModal, setShowModal] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isAddTask, setAddTask] = useState<boolean>(false);
   const [newTask, setNewTask] = useState({
     title: '',
     subtitle: '',
@@ -92,10 +94,23 @@ const Index = () => {
 
     if (!mm || !dd || !yyyy) return false;
 
-    if (mm < 1 || mm > 12) return false;
-    if (dd < 1 || dd > 30) return false;
+    const test = new Date(yyyy, mm - 1, dd);
 
-    return true;
+    return (
+      test.getFullYear() === yyyy &&
+      test.getMonth() === mm - 1 &&
+      test.getDate() === dd
+    );
+  };
+  //check valid of date- time
+  const isPastDateTime = (dateStr: string, timeStr: string) => {
+    const date = toSupabaseDate(dateStr);
+    const time = toSupabaseTime(timeStr);
+
+    const input = new Date(`${date}T${time}`);
+    const now = new Date();
+
+    return input < now;
   };
   //fetchTasks from supabase
   useFocusEffect(
@@ -136,6 +151,7 @@ const Index = () => {
     }
   }
   const handleAddTask = async () => {
+    setAddTask(true);
     if (
       !newTask.title ||
       !newTask.subtitle ||
@@ -144,19 +160,25 @@ const Index = () => {
       !newTask.startTime ||
       !newTask.endTime
     ) {
-      alert("Need to complete all");
+      setErrorMsg("Need to complete all");
       return;
     }
-
     if (!isValidDate(newTask.startDate) || !isValidDate(newTask.endDate)) {
-      alert("Invalid date (MM: 1-12, DD: 1-30)");
+
+      setErrorMsg("Invalid date and time")
+      return;
+    }
+    if (toSupabaseDate(newTask.endDate) < toSupabaseDate(newTask.startDate)) {
+      setErrorMsg("End date must be after start date!");
       return;
     }
 
-    if (toSupabaseDate(newTask.endDate) < toSupabaseDate(newTask.startDate)) {
-      alert("End date must be after start date");
+    if (isPastDateTime(newTask.endDate, newTask.endTime)) {
+
+      setErrorMsg("End time cannot be in the past")
       return;
     }
+
 
     if (!user?.id) {
       alert("dont have user");
@@ -194,8 +216,9 @@ const Index = () => {
         endDate: '',
         startTime: '',
         endTime: '',
-
       })
+      setErrorMsg("");
+      setAddTask(false);
     }
     catch (err: any) {
       alert(err.message);
@@ -408,7 +431,12 @@ const Index = () => {
                 onChangeText={(text) => setNewTask({ ...newTask, endTime: formatTime(text) })}
                 style={{ width: 80, borderWidth: 1, padding: 8, borderRadius: 5, color: theme.colors.text }}
               />
+
             </View>
+            {/**error msg */}
+            {errorMsg && isAddTask && (
+              <Text style={{ color: theme.colors.errorText, marginBottom: 2, }}>{errorMsg}</Text>
+            )}
             {/* Status */}
             <DropDownStatus
               selected={newTask.status}
