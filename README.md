@@ -7,7 +7,7 @@
 ## 🚀 Features
 
 * 📅 **Task Management**
-  Create, update, and delete study tasks بسهولة
+  Create, update, and delete study tasks 
 
 * 📊 **Progress Tracking**
   Monitor your learning progress over time
