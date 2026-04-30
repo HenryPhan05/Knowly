@@ -217,7 +217,7 @@ const LogUp = () => {
         </View>
         {/*Sign Iup Button */}
         <TouchableOpacity style={style.signInButton} onPress={handleSubmit(onSubmit)}>
-          <Text style={style.signInButtonText}>Sign in</Text>
+          <Text style={style.signInButtonText}>Sign Up</Text>
         </TouchableOpacity>
 
         {/*Sign inn */}
